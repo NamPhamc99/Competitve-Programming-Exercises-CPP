@@ -3,7 +3,31 @@
 // and update 
 #include <stdio.h> 
 #include <math.h> 
-  
+
+/*There are two separate tasks here:
+
+Efficiently generate an array c where ci is the number of recipes that recommend temperature i.
+Efficiently answer queries "how many numbers ca, ca + 1, ca + 2, ..., cb" are at least k?" where k is fixed across all queries.
+There are some solutions to this task using advanced data structures or algorithms. For example, a conceptually straightforward idea is the following: create a segment tree c. We can treat all recipes as range update queries which we can do efficiently in (where m is the largest ai or bi) time using lazy propagation.
+
+After all recipes, we replace all ci by 1 if it's at least k, and 0 otherwise. Afterwards, each of the next q queries is a basic range sum query, which can be done simply in  time.
+
+Other solutions exist, too: Fenwick trees with range updates, event sorting, sqrt-decomposition with binary search, Mo's algorithm, and so on. These solutions all pass, but they are all overkill for this task.
+
+A very simple solution is as follows. Initialize c with all zeroes. For recipe that recommends temperatures between li and ri, we should increment cli and decrement cri + 1.
+
+Cumulate all values. That is, set ci to c1 + c2 + c3 + ... + ci. This can be done with one pass through the array.
+
+Now, magically, ci is now the number of recipes that recommend temperature i. If ci is at least k, set it to 1, otherwise, set it to 0.
+
+Cumulate all values again.
+
+Now, every query that asks for the number of admissible temperatures between a and b can be answered simply as cb - ca - 1.
+
+This runs in O(n + q + m), which is really fast.
+
+Note that if your solution does this and still runs quite slow, chances are your solution is using slower input methods. We raised the time limit to 2.5 seconds in this problem in order to avoid failing slow input solutions.
+  */
 // A utility function to get the middle index from corner indexes. 
 int getMid(int s, int e) {  return s + (e -s)/2;  } 
   
